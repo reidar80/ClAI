@@ -12,8 +12,18 @@ function Install-ClAI {
         Write-Warning 'PowerShell 5.1 or later is recommended.'
     }
 
-    $isWindows = $env:OS -like '*Windows*'
-    if (-not $isWindows) {
+    # Ensure private helpers are available when the installer is run standalone
+    $moduleRoot = Split-Path -Parent $PSScriptRoot
+    $privatePath = Join-Path $moduleRoot 'Private'
+    @('HardwareDetection.ps1', 'ModelSelection.ps1', 'Config.ps1') | ForEach-Object {
+        $helperPath = Join-Path $privatePath $_
+        if (Test-Path -LiteralPath $helperPath) {
+            . $helperPath
+        }
+    }
+
+    $runningOnWindows = $env:OS -like '*Windows*'
+    if (-not $runningOnWindows) {
         Write-Warning 'Installer is optimized for Windows; continuing anyway.'
     }
 
@@ -29,6 +39,12 @@ function Install-ClAI {
     $hardware | Format-List | Out-String | Write-Host
     Write-Host "Recommended model: $($recommendation.Recommendation)" -ForegroundColor Green
     Write-Host $recommendation.Reason -ForegroundColor Gray
+
+    Write-Host 'Available models:' -ForegroundColor Cyan
+    foreach ($model in $recommendation.Supported) {
+        $tag = if ($model.Name -eq $recommendation.Recommendation) { ' (recommended)' } else { '' }
+        Write-Host " - $($model.Display) [$($model.Name)]$tag : $($model.Notes)" -ForegroundColor Gray
+    }
 
     $supportedNames = $recommendation.Supported.Name -join ', '
     $choice = Read-Host "Enter model to use [$($recommendation.Recommendation)] (supported: $supportedNames)"
