@@ -15,8 +15,8 @@ public class Program
         // Load configuration
         var settings = await ConfigCommand.LoadSettingsAsync();
         
-        // Create HTTP client and AI service
-        var httpClient = new HttpClient();
+        // Create HTTP client and AI service with proper disposal
+        using var httpClient = new HttpClient();
         var aiService = new OpenAiService(httpClient, settings);
 
         // Build command hierarchy

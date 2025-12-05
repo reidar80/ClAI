@@ -232,10 +232,14 @@ public class FileCommand : Command
 
         try
         {
+            // Use Base64-encoded command to prevent command injection
+            var bytes = System.Text.Encoding.Unicode.GetBytes(command);
+            var encodedCommand = Convert.ToBase64String(bytes);
+
             var processInfo = new ProcessStartInfo
             {
                 FileName = "powershell.exe",
-                Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{command.Replace("\"", "\\\"")}\"",
+                Arguments = $"-NoProfile -ExecutionPolicy Bypass -EncodedCommand {encodedCommand}",
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,

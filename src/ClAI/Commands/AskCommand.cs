@@ -1,5 +1,6 @@
 using System.CommandLine;
 using System.Diagnostics;
+using System.Text;
 using ClAI.Services;
 
 namespace ClAI.Commands;
@@ -82,10 +83,15 @@ public class AskCommand : Command
 
         try
         {
+            // Use Base64-encoded command to prevent command injection
+            // This is the safest way to pass arbitrary commands to PowerShell
+            var bytes = Encoding.Unicode.GetBytes(command);
+            var encodedCommand = Convert.ToBase64String(bytes);
+
             var processInfo = new ProcessStartInfo
             {
                 FileName = "powershell.exe",
-                Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{command.Replace("\"", "\\\"")}\"",
+                Arguments = $"-NoProfile -ExecutionPolicy Bypass -EncodedCommand {encodedCommand}",
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
