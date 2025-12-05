@@ -1,0 +1,62 @@
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# NuGet Packages
+*.nupkg
+nupkg/
+
+# Visual Studio
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+
+# Test Results
+TestResults/
+[Tt]est[Rr]esult*/
+
+# IDE
+.idea/
+*.suo
+*.sln.ide
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+
+# JetBrains Rider
+*.sln.iml
+
+# dotCover
+*.dotCover
+
+# NCrunch
+*.ncrunchproject
+*.ncrunchsolution
+
+# Resharper
+_ReSharper*/
+*.resharper
+
+# Chutzpah Test files
+_Chutzpah*
+
+# Local config
+appsettings.Development.json
+appsettings.Local.json
